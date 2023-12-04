@@ -1,0 +1,24 @@
+rate_1,room_1,150000,"Phòng tiêu chuẩn 8 người, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_10,room_4,300000,"Phòng vip loại 2 12 người, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_11,room_4,350000,"Phòng vip loại 2 12 người, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_12,room_4,400000,"Phòng vip loại 2 12 người, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_13,room_5,400000,"Phòng vip loại 1 15 người, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_14,room_5,450000,"Phòng vip loại 1 15 người, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_15,room_5,500000,"Phòng vip loại 1 15 người, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_16,room_6,450000,"Phòng vip loại 1 20 người, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_17,room_6,500000,"Phòng vip loại 1 20 người, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_18,room_6,600000,"Phòng vip loại 1 20 người, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_19,room_7,100000,"Phòng sinh viên 4 nguười, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_2,room_1,200000,"Phòng tiêu chuẩn 8 người, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_20,room_7,120000,"Phòng sinh viên 4 nguười, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_21,room_7,150000,"Phòng sinh viên 4 nguười, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_22,room_8,100000,"Phòng sinh viên 4 nguười, Áp dụng từ 6 giờ đến 17 ",1
+rate_23,room_8,120000,"Phòng sinh viên 4 nguười, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_24,room_8,150000,"Phòng sinh viên 4 nguười, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_3,room_1,250000,"Phòng tiêu chuẩn 8 người, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_4,room_2,200000,"Phòng tiêu chuẩn 10 người, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_5,room_2,250000,"Phòng tiêu chuẩn 10 người, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_6,room_2,300000,"Phòng tiêu chuẩn 10 người, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
+rate_7,room_3,250000,"Phòng vip loại 2 10 người, Áp dụng từ 6 giờ đến 17 giờ",1
+rate_8,room_3,300000,"Phòng vip loại 2 10 người, Áp dụng sau 17 giờ đến 22 giờ",2
+rate_9,room_3,350000,"Phòng vip loại 2 10 người, Áp dụng từ sau 22 giờ đến 6 giờ sáng",3
