@@ -430,17 +430,39 @@ def saveService(booking_table, room_select_box, service_select_box, quantity_ent
 
 # KẾT THÚC XỬ LÝ TRANG QUẢN LÝ PHÒNG ĐANG SỬ DỤNG
 
-
-root = tk.Tk()
-# root.geometry('1000x600')
-root.title('Đào Tươi Karaoke')
-
 window_width = 1200
 window_height = 680
+
+# Parent page
+root = tk.Tk()
+# root.geometry('1000x600')
+root.title('Karaoke Đào Tiên')
+root.configure(bg='white')
 root.geometry(f"{window_width}x{window_height}")
 
 center_window(root, window_width, window_height)
 
+# Thay đổi màu sắc select box
+
+# root.option_add("*TCombobox*Listbox*Background", '#323232')
+# root.option_add("*TCombobox*Listbox*Foreground", 'white')
+
+# combobox_style = ttk.Style()
+# combobox_style.theme_create('combobox_style', parent='alt',
+#                             settings={
+#                                 'TCombobox':
+#                                 {
+#                                     'configure':
+#                                     {
+#                                         'selectbackground': 'blue',
+#                                         'fieldbackground': '#323232',
+#                                         'background': '#EFC354'
+#                                     }
+#                                 },
+#                             }
+#                             )
+# # ATTENTION: this applies the new style 'combostyle' to all ttk.Combobox
+# combobox_style.theme_use('combobox_style')
 
 # Hàm Đặt Phòng
 def handle_click_table_booking(cus_table, combobox_room):
@@ -453,15 +475,17 @@ def handle_click_table_booking(cus_table, combobox_room):
 
 
 def booking_page():
-    booking_frame = tk.Frame(main_frame)
+    booking_frame = tk.Frame(main_frame, bg='white')
 
-    head_frame = tk.Frame(booking_frame, bg='#ffffff')
+    head_frame = tk.Frame(booking_frame, bg='white')
 
-    heading_lb = tk.Label(booking_frame, text="Quản Lý Đặt Phòng", font=('Bold', 22), bg='#3a7ca5', fg='white')
+    heading_lb = tk.Label(booking_frame, text="Quản Lý Đặt Phòng", font=(
+        'bold', 24), bg='white', fg='#442C2E')
     heading_lb.pack(fill=tk.X, pady=0)
 
     # Label Tên Phòng Trống
-    customer_name_lb = tk.Label(head_frame, text='Tên Phòng: ', font=('Bold', 12), bg="#e7d7c1")
+    customer_name_lb = tk.Label(head_frame, text='Tên Phòng: ', font=(
+        'Bold', 12), fg='#442C2E', bg="white")
     customer_name_lb.place(x=20, y=25, width=160, height=30)
     # Select box
     connection = mysql.connector.connect(host='localhost', user='root',
@@ -475,13 +499,11 @@ def booking_page():
     combobox_room.place(x=200, y=25, width=350, height=30)
 
     # Label Khách Hàng
-    customer_phone_lb = tk.Label(head_frame, text='Khách Hàng: ', font=('Bold', 12), bg="#e7d7c1")
+    customer_phone_lb = tk.Label(head_frame, text='Khách Hàng: ', font=(
+        'Bold', 12), fg='#442C2E', bg="white")
     customer_phone_lb.place(x=20, y=75, width=160, height=30)
-    canvas = tk.Canvas(root, width=640, height=480)
-    canvas.pack()
-    cap = cv2.VideoCapture(0)
     # Select box
-    c.execute("SELECT name_id FROM `customer` order by type desc")
+    c.execute("SELECT name FROM `customer` order by type desc")
     options = [row[0] for row in c.fetchall()]
     selected_cus = StringVar(head_frame)
     combobox_cus = ttk.Combobox(head_frame, textvariable=selected_cus, values=options,
@@ -489,28 +511,25 @@ def booking_page():
     combobox_cus.place(x=200, y=75, width=350, height=30)
 
     # Nút lưu thông tin
-    save_btn = tk.Button(head_frame, text='Lưu', font=('Bold', 12), bg='#3a7ca5', fg='white',
+    save_btn = tk.Button(head_frame, text='Lưu', font=('bold', 12), bg='#FEDBD0', fg='#442C2E',
                          command=lambda: saveBookingRoom(cus_table, combobox_room, combobox_cus))
     save_btn.place(x=570, y=70, width=80, height=40)
     # Nút clear thông tin
-    clear_btn = tk.Button(head_frame, text='Làm sạch', font=('Bold', 12), bg='#3a7ca5', fg='white',
+    clear_btn = tk.Button(head_frame, text='Làm sạch', font=('bold', 12), bg='#FEDBD0', fg='#442C2E',
                           command=lambda: clear_cobobox(
                               combobox_cus,
                               combobox_room))
     clear_btn.place(x=660, y=70, width=80, height=40)
-    # Quét Qr
-    scan_btn = tk.Button(head_frame, text='Quét Mã', font=('Bold', 12), bg='#3a7ca5', fg='white',
-                         command=lambda: start_scanning(root, combobox_cus, canvas, cap))
-    scan_btn.place(x=750, y=70, width=80, height=40)
 
     head_frame.pack(pady=1)
     head_frame.pack_propagate(False)
     head_frame.configure(width=1038, height=120)
 
     # Frame mới cho nút tìm kiếm
-    search_bar_frame = tk.Frame(booking_frame, bg='#3a7ca5')
-    search_lb = tk.Label(search_bar_frame, text="Danh sách Phòng Trống", font=('Bold', 12))
-    search_lb.place(x=20, y=2, height=30)
+    search_bar_frame = tk.Frame(booking_frame, bg='white')
+    search_lb = tk.Label(search_bar_frame, text="Danh sách Phòng Trống", font=(
+        'Bold', 16),  fg='#442C2E', bg='white')
+    search_lb.place(x=400, y=2, height=30)
 
     search_bar_frame.pack(pady=0)
     search_bar_frame.pack_propagate(False)
@@ -519,12 +538,13 @@ def booking_page():
     # Frame mới cho bảng thông tin đặt phòng
     table_cus_frame = tk.Frame(booking_frame, bg='white')
 
-    cus_table = ttk.Treeview(table_cus_frame)
+    cus_table = ttk.Treeview(table_cus_frame,  style="Treeview")
     cus_table.place(x=0, y=10, width=1000, height=360)
 
-    cus_table['column'] = ['Name', 'Volume', 'Description', 'Status', 'CurrentPrice', 'NextPrice']
-    cus_table.column('#0', anchor=tk.W, width=0, stretch=tk.NO)
+    cus_table['column'] = ['Name', 'Volume', 'Description',
+                           'Status', 'CurrentPrice', 'NextPrice']
 
+    cus_table.column('#0', anchor=tk.W, width=0, stretch=tk.NO)
     cus_table.column('Name', anchor=tk.W, width=60)
     cus_table.column('Volume', anchor=tk.W, width=50)
     cus_table.column('Description', anchor=tk.W, width=310)
@@ -538,11 +558,9 @@ def booking_page():
     cus_table.heading('Name', text='Tên Phòng', anchor=tk.W)
     cus_table.heading('Volume', text='Lượng người', anchor=tk.W)
     cus_table.heading('Description', text='Mô Tả Phòng', anchor=tk.W)
-    cus_table.heading('Status', text='Loại Phòng', anchor=tk.W)
+    cus_table.heading('Status', text='Trạng Thái', anchor=tk.W)
     cus_table.heading('CurrentPrice', text='Giá Hiện tại', anchor=tk.W)
     cus_table.heading('NextPrice', text='Giá Khung Giờ Kế Tiếp', anchor=tk.W)
-
-    cus_table.bind('<ButtonRelease-1>', lambda event: handle_click_table_booking(cus_table, combobox_room))
 
     # đọc ra dữ liệu từ hàm loadTableRoomNull()
     loadTableRoomNull(cus_table)
@@ -551,7 +569,7 @@ def booking_page():
     table_cus_frame.pack_propagate(False)
     table_cus_frame.configure(width=1038, height=420, padx=20)
     # kết thúc
-    root.protocol("WM_DELETE_WINDOW", lambda: on_closing(cap, root))
+
     booking_frame.pack(pady=0)
 
 

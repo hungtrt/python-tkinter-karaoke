@@ -1,0 +1,4 @@
+Primary: 442C2E
+Secondary: FEDBD0
+Text: 242424
+Background: FEEAE6
