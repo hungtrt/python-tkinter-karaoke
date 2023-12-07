@@ -1408,11 +1408,11 @@ def service_page():
 
 # Hàm ẩn thanh hoạt động
 def hide_indicators():
-    booking_indicate.config(bg='#20C563')
-    room_indicate.config(bg='#20C563')
-    customer_indicate.config(bg='#20C563')
-    manage_indicate.config(bg='#20C563')
-    employee_indicate.config(bg='#20C563')
+    booking_indicate.config(bg='#ffffff')
+    room_indicate.config(bg='#ffffff')
+    customer_indicate.config(bg='#ffffff')
+    manage_indicate.config(bg='#ffffff')
+    employee_indicate.config(bg='#ffffff')
 
 
 # Hàm xóa frame khác khi chọn vào 1 frame được chọn
@@ -1424,55 +1424,56 @@ def delete_pages():
 # Hàm tạo thanh hoạt động
 def indicate(lb, page):
     hide_indicators()
-    lb.config(bg='#4B7CC4')
+    lb.config(bg='#442C2E')
     delete_pages()
     page()
 
 
-options_frame = tk.Frame(root, bg='#C4E1F6')
+options_frame = tk.Frame(root, bg='#FEEAE6')
 
-booking_btn = tk.Button(options_frame, text='Đặt Phòng', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
+booking_btn = tk.Button(options_frame, text='Đặt Phòng', font=('Bold', 15), fg='#442C2E', bd=0, bg='#ffffff',
                         command=lambda: indicate(booking_indicate, booking_page))
 booking_btn.place(x=10, y=30, width=140)
-booking_indicate = tk.Label(options_frame, text='', bg='#20C563')
+booking_indicate = tk.Label(options_frame, text='', bg='#ffffff')
 booking_indicate.place(x=3, y=30, width=5, height=40)
 
-room_btn = tk.Button(options_frame, text='Thanh Toán', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
+room_btn = tk.Button(options_frame, text='Thanh Toán', font=('Bold', 15), fg='#442C2E', bd=0, bg='#ffffff',
                      command=lambda: indicate(room_indicate, room_page))
 room_btn.place(x=10, y=90, width=140)
-room_indicate = tk.Label(options_frame, text='', bg='#20C563')
+room_indicate = tk.Label(options_frame, text='', bg='#ffffff')
 room_indicate.place(x=3, y=90, width=5, height=40)
 
-manage_btn = tk.Button(options_frame, text='Dịch Vụ', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
+manage_btn = tk.Button(options_frame, text='Dịch Vụ', font=('Bold', 15), fg='#442C2E', bd=0, bg='#ffffff',
                        command=lambda: indicate(manage_indicate, service_page))
 manage_btn.place(x=10, y=150, width=140)
-manage_indicate = tk.Label(options_frame, text='', bg='#20C563')
+manage_indicate = tk.Label(options_frame, text='', bg='#ffffff')
 manage_indicate.place(x=3, y=150, width=5, height=40)
 
-customer_btn = tk.Button(options_frame, text='Khách Hàng', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
+customer_btn = tk.Button(options_frame, text='Khách Hàng', font=('Bold', 15), fg='#442C2E', bd=0, bg='#ffffff',
                          command=lambda: indicate(customer_indicate, customer_page))
 customer_btn.place(x=10, y=210, width=140)
-customer_indicate = tk.Label(options_frame, text='', bg='#20C563')
+customer_indicate = tk.Label(options_frame, text='', bg='#ffffff')
 customer_indicate.place(x=3, y=210, width=5, height=40)
 
-employee_btn = tk.Button(options_frame, text='Nhân Viên', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
+employee_btn = tk.Button(options_frame, text='Nhân Viên', font=('Bold', 15), fg='#442C2E', bd=0, bg='#ffffff',
                          command=lambda: indicate(employee_indicate, employee_page))
 employee_btn.place(x=10, y=270, width=140)
-employee_indicate = tk.Label(options_frame, text='', bg='#20C563')
+employee_indicate = tk.Label(options_frame, text='', bg='#ffffff')
 employee_indicate.place(x=3, y=270, width=5, height=40)
 
 options_frame.pack(side=tk.LEFT)
 options_frame.pack_propagate(False)
 options_frame.configure(width=160, height=680)
 
-main_frame = tk.Frame(root, bg='#ffffff', highlightbackground='#FFFDFF', highlightthickness=2)
+main_frame = tk.Frame(root, bg='#ffffff',
+                      highlightbackground='#FFFDFF', highlightthickness=2)
 main_frame.pack(side=tk.LEFT)
 main_frame.pack_propagate(False)
 main_frame.configure(width=1038, height=680)
 
 
 def insert_image(frame):
-    image_path = "E:\python-tkinter-karaoke\Data\karaoke-night-2-optimised.png"
+    image_path = "D:\OneDrive - Đại học FPT- FPT University\Documents\IT\Python\Karaoke Management & Visualization\Data\\peach.png"
 
     image = tk.PhotoImage(file=image_path)
 
