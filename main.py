@@ -1,6 +1,7 @@
 import tkinter as tk
 from abc import ABC, abstractmethod
-from tkinter import ttk
+from collections import OrderedDict
+from tkinter import ttk, font
 
 import cv2
 import mysql.connector
@@ -8,15 +9,20 @@ from tkinter import messagebox
 from datetime import datetime
 from tkinter import StringVar
 import locale
+import pandas as pd
+
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 from CheckoutFunction import get_incentives_percent
 from card.PrintMemberCard import printCardMembership
-from card.demo import start_scanning, on_closing
+from card.scan import start_scanning, on_closing
 from clear import clear_textfields, clear_cobobox, clear_cobobox_and_textfield, clear_checkout_room, \
     clearNameServiceAndQuantity, clear_textfields_update
 from connectionDB import connection
 from customer_page import removeCustomerByPhone, add_customer, update_customer
-from export_csv import export_csv
 from oop import readFileAndDisplay, deleteDataInFile, updateDataInFile, addPersonnel
 from pdf.invoice_data import printFuncInvoice, id_room, id_booking_room
 from room_calculation import total_for_frame_time_from_database
@@ -503,7 +509,7 @@ def booking_page():
                          command=lambda: start_scanning(root, combobox_cus, canvas, cap))
     scan_btn.place(x=750, y=70, width=80, height=40)
 
-    head_frame.pack(pady=1)
+    head_frame.pack(pady=0)
     head_frame.pack_propagate(False)
     head_frame.configure(width=1038, height=120)
 
@@ -826,7 +832,7 @@ def room_page():
                            ))
     delete_btn.place(x=720, y=175, width=110, height=40)
 
-    head_frame.pack(pady=1)
+    head_frame.pack(pady=0)
     head_frame.pack_propagate(False)
     head_frame.configure(width=1038, height=265)
 
@@ -880,7 +886,7 @@ def employee_page():
     head_frame = tk.Frame(manager_frame, bg='#ffffff')
 
     heading_lb = tk.Label(manager_frame, text="Quản Lý Nhân Sự", font=('Bold', 22), bg='#3a7ca5', fg='white')
-    heading_lb.pack(fill=tk.X, pady=1)
+    heading_lb.pack(fill=tk.X, pady=0)
 
     # Label và textfields
     personnel_name_lb = tk.Label(head_frame, text='Tên: ', font=('Bold', 12), bg="#e7d7c1")
@@ -949,7 +955,7 @@ def employee_page():
                           command=lambda: readFileAndDisplay(cus_table, True))
     clear_btn.place(x=930, y=170, width=80, height=40)
 
-    head_frame.pack(pady=1)
+    head_frame.pack(pady=0)
     head_frame.pack_propagate(False)
     head_frame.configure(width=1038, height=225)
 
@@ -1022,6 +1028,253 @@ def employee_page():
         bonus_text_field.delete(0, tk.END)
 
     manager_frame.pack(pady=0)
+
+
+def draw_pie_chart(data, title, x, y):
+    size = (2.45, 1.55)
+    fig = Figure(figsize=size)
+    ax = fig.add_axes([0, 0, 1, 1], aspect=1)
+    wedges, texts, autotexts = ax.pie(data.values(), labels=data.keys(), autopct='%1.1f%%', startangle=90)
+
+    colors = ['blue', 'orange', 'green', 'red', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
+    for i, wedge in enumerate(wedges):
+        wedge.set_color(colors[i % len(colors)])
+
+    for text, autotext in zip(texts, autotexts):
+        text.set_color('black')
+        autotext.set_color('white')
+
+    canvas = FigureCanvasTkAgg(fig, master=main_frame)
+    canvas.draw()
+    canvas.get_tk_widget().place(x=x, y=y)
+    ax.set_title(title)
+
+    return fig
+
+
+def draw_double_bar_chart(data, title, x, y, width=5.2, height=2.7):
+    fig, ax = plt.subplots(figsize=(width, height))
+    canvas = FigureCanvasTkAgg(fig, master=main_frame)
+    canvas.draw()
+    canvas.get_tk_widget().place(x=x, y=y)
+
+    # Return the fig object
+
+    categories = list(data.keys())
+    values1 = [data[category]['Phòng'] for category in categories]
+    values2 = [data[category]['Dịch vụ'] for category in categories]
+
+    # Convert x-axis categories to numerical indices
+    indices = np.arange(len(categories))
+
+    bar_width = 0.4
+    bar1 = ax.bar(indices, values1, bar_width, label='Phòng', color='blue')
+    bar2 = ax.bar(indices + bar_width, values2, bar_width, label='Dịch vụ', color='orange')
+
+    ax.set_title(title)
+    ax.set_xlabel('Ngày')
+    ax.set_ylabel('Doanh Thu')
+
+    ax.set_xticks(indices + bar_width / 2)
+    ax.set_xticklabels(categories)
+
+    ax.legend()
+
+    # Add labels on top of the bars
+    # for bar in [bar1, bar2]:
+    #     for rect in bar:
+    #         height = rect.get_height()
+    #         ax.annotate('{}'.format(height),
+    #                     xy=(rect.get_x() + rect.get_width() / 2, height),
+    #                     xytext=(0, 3),  # 3 points vertical offset
+    #                     textcoords="offset points",
+    #                     ha='center', va='bottom')
+
+    canvas = FigureCanvasTkAgg(fig, master=main_frame)
+    canvas.draw()
+    canvas.get_tk_widget().place(x=x, y=y)
+
+    # Return the fig object
+    return fig
+
+
+def draw_line_chart(data, title, x, y, width=5.2, height=2.7):
+    fig, ax = plt.subplots(figsize=(width, height))
+    days = list(data.keys())
+    revenue = list(data.values())
+    ax.plot(days, revenue, marker='o', color='blue', linestyle='-')
+
+    ax.set_title(title)
+    ax.set_xlabel('Days of the Week')
+    ax.set_ylabel('Doanh Thu')
+
+    canvas = FigureCanvasTkAgg(fig, master=main_frame)
+    canvas.draw()
+    canvas.get_tk_widget().place(x=x, y=y)
+
+    # Return the fig object
+    return fig
+
+
+def draw_stacked_bar_chart(data, title, x, y, width=5, height=2.7):
+    fig, ax = plt.subplots(figsize=(width, height))
+
+    categories = list(data.keys())
+    values1 = [data[category]['Khách Vip'] for category in categories]
+    values2 = [data[category]['Membership'] for category in categories]
+    values3 = [data[category]['Vãng Lai'] for category in categories]
+
+    ax.bar(categories, values1, label='Khách Vip', color='blue')
+    ax.bar(categories, values2, label='Membership', color='orange', bottom=values1)
+    ax.bar(categories, values3, label='Vãng Lai', color='green', bottom=[i + j for i, j in zip(values1, values2)])
+
+    ax.set_title(title)
+    ax.set_xlabel('Ngày')
+    ax.set_ylabel('Doanh Thu')
+
+    ax.legend()
+
+    canvas = FigureCanvasTkAgg(fig, master=main_frame)
+    canvas.draw()
+    canvas.get_tk_widget().place(x=x, y=y)
+
+    # Return the fig object
+    return fig
+
+
+def totalRevenue():
+    df = pd.read_csv('data.csv')
+    totalRevenue = df['Tổng doanh thu'].sum()
+    return totalRevenue
+
+
+def totalRooms():
+    df = pd.read_csv('data.csv')
+    totalRooms = df['Tổng tiền Phòng'].sum()
+    return totalRooms
+
+
+def totalServices():
+    df = pd.read_csv('data.csv')
+    totalServices = df['Tổng dịch vụ'].sum()
+    return totalServices
+
+def totalRoomVip():
+    df = pd.read_csv('data.csv')
+    totalRoomVip = df['Doanh thu Theo Phòng Vip'].sum()
+    return totalRoomVip
+
+def totalRoomNormal():
+    df = pd.read_csv('data.csv')
+    totalRoomNormal = df['Doanh thu Theo Phòng Thường'].sum()
+    return totalRoomNormal
+
+def totalCusVip():
+    df = pd.read_csv('data.csv')
+    totalRoomNormal = df['Doanh Thu Theo Khách Vip'].sum()
+    return totalRoomNormal
+
+def totalCusMember():
+    df = pd.read_csv('data.csv')
+    totalRoomNormal = df['Doanh Thu theo Membership'].sum()
+    return totalRoomNormal
+
+def totalCusNormal():
+    df = pd.read_csv('data.csv')
+    totalRoomNormal = df['Doanh thu theo khách Vãng lai'].sum()
+    return totalRoomNormal
+
+def static_page():
+    df = pd.read_csv('data.csv')
+    static_frame = tk.Frame(main_frame)
+    head_frame = tk.Frame(static_frame, bg='#F4F5F4')
+    head_frame.pack(pady=0)
+    head_frame.pack_propagate(False)
+    head_frame.configure(width=1038, height=680)
+
+    heading_lb = tk.Label(head_frame, text="Thống Kê Doanh Thu Trong Tuần", font=('Bold', 22), bg='#3a7ca5', fg='white')
+    heading_lb.pack(fill=tk.X, pady=0)
+
+    width_lb = 155
+    height_lb = 110
+    x_location = 10
+    y_location = 50
+    bold_font = font.Font(family="Helvetica", size=11, weight="bold")
+    bold_font_2 = font.Font(family="Helvetica", size=13, weight="bold")
+
+    totalRevenu = format_currency(totalRevenue())
+    totalService = format_currency(totalServices())
+    totalRoom = format_currency(totalRooms())
+
+    id_name_lb = tk.Label(head_frame, text='Tổng Doanh Thu\n ', font=bold_font, bg="white")
+    id_name_lb.place(x=x_location, y=y_location, width=width_lb, height=height_lb)
+    id_name_lb = tk.Label(head_frame, text=totalRevenu, font=bold_font_2, bg="#e7d7c1", fg="#38669C")
+    id_name_lb.place(x=20, y=110, width=140, height=28)
+
+    id_name_lb = tk.Label(head_frame, text='Doanh Thu Phòng\n ', font=bold_font, bg="white")
+    id_name_lb.place(x=x_location + 165, y=y_location, width=width_lb, height=height_lb)
+    id_name_lb = tk.Label(head_frame, text=totalRoom, font=bold_font_2, bg="#e7d7c1", fg="#38669C")
+    id_name_lb.place(x=45 + 140, y=110, width=140, height=28)
+
+    id_name_lb = tk.Label(head_frame, text='Tổng Dịch Vụ\n ', font=bold_font, bg="white")
+    id_name_lb.place(x=x_location + 328, y=y_location, width=width_lb, height=height_lb)
+    id_name_lb = tk.Label(head_frame, text=totalService, font=bold_font_2, bg="#e7d7c1", fg="#38669C")
+    id_name_lb.place(x=50 + 300, y=110, width=140, height=28)
+
+    # Biêu đồ tròn
+    servicePercent = totalServices() * 100 / totalRevenue()
+    roomPercent = totalRooms() * 100 / totalRevenue()
+    data1 = {'Phòng': roomPercent, 'Dịch Vụ': servicePercent}
+    fig1 = draw_pie_chart(data1, 'Tổng Doanh Thu', x_location, y_location + 120)
+
+    # roomVipPercent = totalRoomVip() * 100 / totalRevenue()
+    # roomNormalPercent = totalRoomNormal() * 100 / totalRevenue()
+    # data2 = {'Phòng VIP': roomVipPercent, 'Phòng Thường': roomNormalPercent}
+    # fig2 = draw_pie_chart(data2, 'Doanh Thu Phòng', x_location + 165, y_location + 120)
+
+    cusVipPercent = totalCusVip() * 100 / totalRevenue()
+    cusMemberPercent = totalCusMember() * 100 / totalRevenue()
+    cusNormalPercent = totalCusNormal() * 100 / totalRevenue()
+    data3 = {'VIP': cusVipPercent, 'Membership': cusMemberPercent, 'Vãng Lai': cusNormalPercent}
+    fig3 = draw_pie_chart(data3, 'Tổng Dịch Vụ', x_location + 250, y_location + 120)
+
+    # Biều đồ đường
+    revenueSet = list(OrderedDict.fromkeys(df['Tổng doanh thu']))
+    sorted_days = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật']
+    daily_revenue_column = dict(zip(sorted_days, revenueSet))
+    draw_line_chart(daily_revenue_column, 'Doanh Thu Hàng Ngày Trong Tuần', x_location, y_location + 300)
+
+    # Dữ liệu cho biểu đồ cột đôi
+    roomSet = list(OrderedDict.fromkeys(df['Tổng tiền Phòng']))
+    serviceSet = list(OrderedDict.fromkeys(df['Tổng dịch vụ']))
+    daily_revenue = {
+        'Thứ 2': {'Phòng': roomSet[0], 'Dịch vụ': serviceSet[0]},
+        'Thứ 3': {'Phòng': roomSet[1], 'Dịch vụ': serviceSet[1]},
+        'Thứ 4': {'Phòng': roomSet[2], 'Dịch vụ': serviceSet[2]},
+        'Thứ 5': {'Phòng': roomSet[3], 'Dịch vụ': serviceSet[3]},
+        'Thứ 6': {'Phòng': roomSet[4], 'Dịch vụ': serviceSet[4]},
+        'Thứ 7': {'Phòng': roomSet[5], 'Dịch vụ': serviceSet[5]},
+        'Chủ Nhật': {'Phòng': roomSet[6], 'Dịch vụ': serviceSet[6]}
+    }
+    draw_double_bar_chart(daily_revenue, 'Doanh Thu Phòng và Dịch Vụ', x_location + 490, y_location)
+
+    # Dữ liệu cho biểu đồ cột dung lượng
+    cusVip = list(OrderedDict.fromkeys(df['Doanh Thu Theo Khách Vip']))
+    cusMember = list(OrderedDict.fromkeys(df['Doanh Thu theo Membership']))
+    cusNormal = list(OrderedDict.fromkeys(df['Doanh thu theo khách Vãng lai']))
+
+    daily_revenue = {
+        'Thứ 2': {'Khách Vip': cusVip[0], 'Membership': cusMember[0], 'Vãng Lai': cusNormal[0]},
+        'Thứ 3': {'Khách Vip': cusVip[1], 'Membership': cusMember[1], 'Vãng Lai': cusNormal[1]},
+        'Thứ 4': {'Khách Vip': cusVip[2], 'Membership': cusMember[2], 'Vãng Lai': cusNormal[2]},
+        'Thứ 5': {'Khách Vip': cusVip[3], 'Membership': cusMember[3], 'Vãng Lai': cusNormal[3]},
+        'Thứ 6': {'Khách Vip': cusVip[4], 'Membership': cusMember[4], 'Vãng Lai': cusNormal[4]},
+        'Thứ 7': {'Khách Vip': cusVip[5], 'Membership': cusMember[5], 'Vãng Lai': cusNormal[5]},
+        'Chủ Nhật': {'Khách Vip': cusVip[6], 'Membership': cusMember[6], 'Vãng Lai': cusNormal[6]}
+    }
+
+    draw_stacked_bar_chart(daily_revenue, 'Doanh Thu Theo Loại Phòng', x_location + 500, y_location + 300)
+    static_frame.pack(pady=0)
 
 
 # Hàm Trang Khách Hàng
@@ -1118,7 +1371,7 @@ def customer_page():
                            command=lambda: exportFileEvent(customer_phone_text_field))
     export_csv.place(x=930, y=170, width=80, height=40)
 
-    head_frame.pack(pady=1)
+    head_frame.pack(pady=0)
     head_frame.pack_propagate(False)
     head_frame.configure(width=1038, height=225)
 
@@ -1337,7 +1590,7 @@ def service_page():
                           ))
     clear_btn.place(x=290, y=170, width=80, height=40)
 
-    head_frame.pack(pady=1)
+    head_frame.pack(pady=0)
     head_frame.pack_propagate(False)
     head_frame.configure(width=1038, height=225)
 
@@ -1395,6 +1648,7 @@ def hide_indicators():
     customer_indicate.config(bg='#20C563')
     manage_indicate.config(bg='#20C563')
     employee_indicate.config(bg='#20C563')
+    static_indicate.config(bg='#20C563')
 
 
 # Hàm xóa frame khác khi chọn vào 1 frame được chọn
@@ -1411,7 +1665,7 @@ def indicate(lb, page):
     page()
 
 
-options_frame = tk.Frame(root, bg='#C4E1F6')
+options_frame = tk.Frame(root, bg='#FAC4AB')
 
 booking_btn = tk.Button(options_frame, text='Đặt Phòng', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
                         command=lambda: indicate(booking_indicate, booking_page))
@@ -1443,6 +1697,12 @@ employee_btn.place(x=10, y=270, width=140)
 employee_indicate = tk.Label(options_frame, text='', bg='#20C563')
 employee_indicate.place(x=3, y=270, width=5, height=40)
 
+static_btn = tk.Button(options_frame, text='Thống Kê', font=('Bold', 15), fg='#158aff', bd=0, bg='#FFFDFF',
+                       command=lambda: indicate(static_indicate, static_page))
+static_btn.place(x=10, y=330, width=140)
+static_indicate = tk.Label(options_frame, text='', bg='#20C563')
+static_indicate.place(x=3, y=330, width=5, height=40)
+
 options_frame.pack(side=tk.LEFT)
 options_frame.pack_propagate(False)
 options_frame.configure(width=160, height=680)
@@ -1454,7 +1714,7 @@ main_frame.configure(width=1038, height=680)
 
 
 def insert_image(frame):
-    image_path = "E:\python-tkinter-karaoke\Data\karaoke-night-2-optimised.png"
+    image_path = "E:\\New folder\\python-tkinter-karaoke\\public\\peach.png"
 
     image = tk.PhotoImage(file=image_path)
 
